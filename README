@@ -1,0 +1,17 @@
+A simple iPad app that demonstrates using Haskell in an iPad app.
+
+The Haskell app is a Lisp interpretter.
+
+The code is licensed under an MIT license.
+
+The Lisp (Scheme) interpretter is based very, very closely on 
+http://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
+
+In order to run the code, you'll need ghc-iphone http://projects.haskell.org/ghc-iphone/
+
+And, yes, the UI is ugly... I do historically ugly UIs in AppKit:
+http://groups.google.com/group/comp.sys.next.announce/tree/browse_frm/month/1997-03?_done=%2Fgroup%2Fcomp.sys.next.announce%2Fbrowse_frm%2Fmonth%2F1997-03%3F&
+
+Note the first bullet point is a redesigned UI.
+
+Also, this code is totally, 100% unsupported.
