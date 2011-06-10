@@ -1,0 +1,24 @@
+Name: Lisp
+Version: 0.1
+Synopsis: A Scheme Interpretter running on the iPad
+Description: A Scheme Interpretter running on the iPad
+Build-type: Simple
+Cabal-Version: >= 1.6
+
+Executable Lisp
+    Main-Is: Main.hs
+    GHC-Options: -threaded -XExistentialQuantification
+    Frameworks:
+        Foundation
+        UIKit
+        QuartzCore
+        OpenGLES
+    Build-Depends:
+        base >= 4,
+        old-time,
+        mtl,
+        random,
+        network,
+        array,
+        haskell98,
+        parsec
