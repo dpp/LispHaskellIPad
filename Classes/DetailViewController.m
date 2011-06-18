@@ -8,6 +8,7 @@
 
 #import "DetailViewController.h"
 #import "RootViewController.h"
+#import "PerformOMatic.h"
 
 static void (*cb_viewDidLoad)(void*);
 
@@ -27,6 +28,13 @@ void addToResult(DetailViewController* vc, char *str)
 void setLispEval(DetailViewController *vc, void (*cb)(void *vc, const char *))
 {
 	vc -> cb_lispEval = cb;
+}
+
+void dispatchFunc(void (*fp)(void*)) {
+	// dispatch_async_f(dispatch_get_main_queue(), NULL, fp);
+	id runner = [[PerformOMatic alloc] init];
+	[runner setFunc:fp];
+	[runner run];
 }
 
 @interface DetailViewController ()

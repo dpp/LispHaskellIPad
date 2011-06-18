@@ -6,14 +6,15 @@ import Monad
 import Control.Monad.Error
 import IO hiding (try)
 import Data.IORef
-
-
+import System.Random
+import Control.Concurrent
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.Ptr
 import Network
 import System.IO
 import Data.IORef
+import System.IO.Unsafe
 
 foreign import ccall safe "openWindow" openWindow
          :: IO CInt
@@ -28,6 +29,27 @@ foreign import ccall safe "setLispEval" setLispEval :: ViewController -> FunPtr 
 
 foreign import ccall safe "addToResult" addToResult :: ViewController -> CString -> IO ()
 
+data ObjCId_struct
+type ObjCId = Ptr ObjCId_struct
+
+data ObjCSEL_struct
+type ObjCSEL = Ptr ObjCSEL_struct
+
+foreign import ccall safe "objc_msgSend" objc_msgSend :: ObjCId -> ObjCSEL -> IO ObjCId
+foreign import ccall safe "objc_msgSend" objc_msgSendInt :: ObjCId -> ObjCSEL -> Int -> IO ObjCId
+foreign import ccall safe "sel_registerName" sel_registerName :: CString -> IO ObjCSEL
+foreign import ccall safe "objc_lookUpClass" objc_lookUpClass :: CString -> IO ObjCId
+
+
+makeAString :: IO ObjCId
+makeAString = do
+    strCls <- withCString "NSString" objc_lookUpClass 
+    allocName <- withCString "alloc" sel_registerName
+    alloced <- objc_msgSend strCls allocName
+    hPutStrLn stderr "Alloced it"
+    initName <- withCString "init" sel_registerName 
+    objc_msgSend alloced initName
+
 openLogger :: IO Handle
 openLogger = return stderr
 
@@ -36,7 +58,42 @@ type ViewDidLoad = ViewController -> IO ()
 foreign import ccall safe "wrapper" mkViewDidLoad :: ViewDidLoad -> IO (FunPtr ViewDidLoad)
 foreign import ccall safe "setViewDidLoad" setViewDidLoad :: FunPtr ViewDidLoad -> IO ()
 
-          
+foreign import ccall safe "dispatchFunc" dispatchFunc :: FunPtr StrVoid -> IO ()
+
+type StrVoid = CString -> IO ()
+foreign import ccall safe "wrapper" mkStrCB :: StrVoid -> IO (FunPtr StrVoid)
+
+foreign export ccall releaseMe :: FunPtr a -> IO ()
+releaseMe :: FunPtr a -> IO ()
+releaseMe ptr = freeHaskellFunPtr ptr
+
+myThread :: IO ()
+myThread = do 
+          str <- makeAString
+          log <- openLogger
+          rSalt <- getStdRandom (randomR (1,1000000))
+          threadDelay $ 1000000 + rSalt
+          runOnMain $ appendStr $ "\nHello dude " ++ show rSalt
+          myThread
+    
+runOnMain :: IO () -> IO ()
+runOnMain todo = do
+                  func <- funky
+                  dispatchFunc func
+  where funky =  mkStrCB $ \v -> do
+                                   todo
+                                   --func <- funky
+                                   --freeHaskellFunPtr func
+
+viewController :: IORef (Maybe ViewController) 
+viewController = unsafePerformIO $ newIORef Nothing
+
+appendStr :: String -> IO ()
+appendStr str = do
+                vcm <- readIORef viewController
+                case vcm of
+                   Just vc -> withCString str $ \cstr -> addToResult vc cstr
+                   _ -> return ()
 main :: IO ()
 main = do
      log <- openLogger
@@ -46,10 +103,12 @@ main = do
      
      -- execute a line of List and call the callback with the result
      runALine <- wrapFuncInvoke $ \vc line -> do
+                                              writeIORef viewController $ Just vc
                                               toEval <- peekCString line
                                               res <- evalString env toEval
-                                              back <- withCString res $ \back -> addToResult vc back
-                                              return ()
+                                              appendStr res
+
+     forkOS myThread
 
      -- the initial callback that sets up the rest
      vdl <- mkViewDidLoad $ \vc -> do
@@ -368,7 +427,7 @@ nullEnv = newIORef []
 
 type IOThrowsError = ErrorT LispError IO
 
--- liftThrows :: ThrowsError a -> IOThrowsError a
+liftThrows :: ThrowsError a -> IOThrowsError a
 liftThrows (Left err) = throwError err
 liftThrows (Right val) = return val
 

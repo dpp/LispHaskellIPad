@@ -17,6 +17,7 @@
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
 		DE23F94C139EDDD10030BDEB /* libLisp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE23F94B139EDDD10030BDEB /* libLisp.a */; };
+		DEAB8A8913AC117200A67CC3 /* PerformOMatic.m in Sources */ = {isa = PBXBuildFile; fileRef = DEAB8A8813AC117200A67CC3 /* PerformOMatic.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Lisp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Lisp-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		DE23F94B139EDDD10030BDEB /* libLisp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLisp.a; path = dist/build/Lisp/libLisp.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEAB8A8713AC117200A67CC3 /* PerformOMatic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformOMatic.h; sourceTree = "<group>"; };
+		DEAB8A8813AC117200A67CC3 /* PerformOMatic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformOMatic.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 				28042008108E984D000629CD /* RootViewController.m */,
 				28042009108E984D000629CD /* DetailViewController.h */,
 				2804200A108E984D000629CD /* DetailViewController.m */,
+				DEAB8A8713AC117200A67CC3 /* PerformOMatic.h */,
+				DEAB8A8813AC117200A67CC3 /* PerformOMatic.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 				1D3623260D0F684500981E51 /* LispAppDelegate.m in Sources */,
 				2804200B108E984D000629CD /* RootViewController.m in Sources */,
 				2804200C108E984D000629CD /* DetailViewController.m in Sources */,
+				DEAB8A8913AC117200A67CC3 /* PerformOMatic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
